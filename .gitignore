@@ -45,3 +45,8 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# These folders have all the Unity garbage
+Library/
+.vs/
+obj/
