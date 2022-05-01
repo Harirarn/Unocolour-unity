@@ -76,3 +76,7 @@ crashlytics-build.properties
 
 # JsonDotNet
 /[Aa]ssets/[Jj]son[Dd]ot[Nn]et/
+
+# Achievements file
+
+*achievements.json
