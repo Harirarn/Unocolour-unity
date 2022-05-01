@@ -33,10 +33,10 @@ public class AchievementManager
     {
         panel = _panel;
         LoadData();
-        foreach (AchievementDescription achievement in panel.achievementDescriptions)
-        {
-            getAchievement(achievement.name, achievement.defaults);
-        }
+        // foreach (AchievementDescription achievement in panel.achievementDescriptions)
+        // {
+        //     getAchievement(achievement.name, achievement.defaults);
+        // }
         // Highs
         hiscore = getAchievement(AchievementPanel.Names.score10000);
         resetTrackers();
@@ -252,7 +252,7 @@ public class AchievementManager
             changed = setAchievement(AchievementPanel.Names.max8for1, round) || changed;
         }
         // Miser Achievements
-        if (stackno == 0 && round < getAchievement(AchievementPanel.Names.loseby4))
+        if (stackno == 0 && (round < getAchievement(AchievementPanel.Names.loseby4) || getAchievement(AchievementPanel.Names.loseby4) == 0))
         {
             changed = setAchievement(AchievementPanel.Names.loseby4, round) || changed;
         }

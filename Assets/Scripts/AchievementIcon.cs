@@ -33,9 +33,10 @@ public class AchievementIcon : MonoBehaviour
         this.achievement = achievement;
         this._active = achievement.completed;
         this.panel = panel;
+        Start();
     }
 
-    public void SetSpriteActive(bool active)
+    private void SetSpriteActive(bool active)
     {
         iconImage.sprite = active ? iconSprite : fadedIconSprite;
         backImage.color = active ? Color.white : Color.gray;
