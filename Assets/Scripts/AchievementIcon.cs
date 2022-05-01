@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class AchievementIcon: MonoBehaviour {
+public class AchievementIcon : MonoBehaviour
+{
 
-	public AchievementDescription achievement;
+    public AchievementDescription achievement;
     private bool _active;
     private AchievementPanel panel;
-	public bool active
+    public bool active
     {
         get
         {
@@ -18,7 +19,7 @@ public class AchievementIcon: MonoBehaviour {
             SetSpriteActive(value);
         }
     }
-	public Sprite iconSprite;
+    public Sprite iconSprite;
     public Sprite fadedIconSprite;
     public GameObject icon;
 
@@ -34,7 +35,7 @@ public class AchievementIcon: MonoBehaviour {
         this.panel = panel;
     }
 
-    private void SetSpriteActive(bool active)
+    public void SetSpriteActive(bool active)
     {
         iconImage.sprite = active ? iconSprite : fadedIconSprite;
         backImage.color = active ? Color.white : Color.gray;
@@ -45,17 +46,17 @@ public class AchievementIcon: MonoBehaviour {
         panel.showDescription(achievement.name);
     }
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start()
     {
         backImage = GetComponent<Image>();
         iconImage = icon.GetComponent<Image>();
         SetSpriteActive(active);
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    }
+
+    // Update is called once per frame
+    void Update()
     {
-		SetSpriteActive(active);
-	}
+        SetSpriteActive(active);
+    }
 }

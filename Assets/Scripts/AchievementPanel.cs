@@ -104,6 +104,7 @@ public class AchievementPanel : MonoBehaviour
     public void updateAchievement(Names achievement, int levelAchieved)
     {
         achievementDescriptions[(int)achievement].updateLevel(levelAchieved);
+        achievementIconGameObjects[(int)achievement].GetComponent<AchievementIcon>().SetSpriteActive(achievementDescriptions[(int)achievement].completed);
     }
 
     public void showDescription(Names achievement)
