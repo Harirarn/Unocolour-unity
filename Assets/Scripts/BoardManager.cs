@@ -19,7 +19,7 @@ public class BoardManager : MonoBehaviour
     public AudioClip cardputSound;
     public AudioClip cardtakeSound;
     public AchievementManager achievementsManager;
-    private Camera camera;
+    private Camera cameraReference;
 
     readonly static float DistributeTime = 0.05f;
     readonly static int columns = 10;
@@ -374,7 +374,7 @@ public class BoardManager : MonoBehaviour
 
     CellPos GetMouseCell()
     {
-        Vector3 currentPos = camera.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 currentPos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
         //Debug.Log (currentPos);
         int i, j;
         for (i = 0; i < columns; i++)
@@ -398,7 +398,7 @@ public class BoardManager : MonoBehaviour
 
     void Start()
     {
-        camera = cameraObject.GetComponent<Camera>();
+        cameraReference = cameraObject.GetComponent<Camera>();
         InstantiateBoard();
         scoresheet.SetActive(false);
         soundEmitter = GetComponent<AudioSource>();
