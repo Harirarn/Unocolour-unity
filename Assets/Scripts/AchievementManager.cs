@@ -8,7 +8,7 @@ using System.Linq;
 [System.Serializable]
 public class AchievementData
 {
-    public Dictionary<string, int> data;
+    public Dictionary<AchievementPanel.Names, int> data;
 }
 
 
@@ -17,13 +17,12 @@ public class AchievementManager
 {
 
     private int hiscore;
-    private int hiround;
-    private int histack;
 
     private bool samesameTrack,
                  nomatchTrack,
                  blacktabooTrack,
                  max8for1;
+    private int allblacks;
 
     private AchievementData achievements = new AchievementData();
     private string dataFile;
@@ -39,7 +38,7 @@ public class AchievementManager
             getAchievement(achievement.name, achievement.defaults);
         }
         // Highs
-        hiscore = getAchievement("score10000");
+        hiscore = getAchievement(AchievementPanel.Names.score10000);
         resetTrackers();
 
     }
@@ -55,24 +54,26 @@ public class AchievementManager
         nomatchTrack = true;
         blacktabooTrack = true;
         max8for1 = false;
+        allblacks = 0;
     }
 
     public void LoadData()
     {
         dataFile = Application.dataPath + "/achievements.json";
-        //Debug.Log(dataFile);
+        //Debug.Log((string)dataFile);
+        //Debug.Log(File.Exists(dataFile));
         if (File.Exists(dataFile))
         {
             string filetext = File.ReadAllText(dataFile);
             achievements = JsonConvert.DeserializeObject<AchievementData>(filetext);
             if (achievements.data == null)
             {
-                achievements.data = new Dictionary<string, int>();
+                achievements.data = new Dictionary<AchievementPanel.Names, int>();
             }
         }
         else
         {
-            achievements.data = new Dictionary<string, int>();
+            achievements.data = new Dictionary<AchievementPanel.Names, int>();
         }
     }
 
@@ -80,12 +81,11 @@ public class AchievementManager
     {
         string filetext = JsonConvert.SerializeObject(achievements);
         File.WriteAllText(dataFile, filetext);
-        panel.setDescription("bye");
         //Debug.Log("SaveData: " + achievements.data.Keys.Count.ToString());
         //Debug.Log(filetext);
     }
 
-    public int getAchievement(string achievement, int defaultValue = 0)
+    public int getAchievement(AchievementPanel.Names achievement, int defaultValue = 0)
     {
         if (achievements.data.ContainsKey(achievement))
         {
@@ -98,7 +98,7 @@ public class AchievementManager
         }
     }
 
-    private bool setAchievement(string achievement, int value = 1)
+    private bool setAchievement(AchievementPanel.Names achievement, int value = 1)
     {
         if (achievements.data.ContainsKey(achievement) ? achievements.data[achievement] != value : true)
         {
@@ -106,7 +106,7 @@ public class AchievementManager
             //SaveData();
             if (panel != null && value > 0)
             {
-                panel.updateAchievement(achievement);
+                panel.updateAchievement(achievement, value);
             }
             return true;
         }
@@ -120,7 +120,7 @@ public class AchievementManager
         if (newscore > hiscore)
         {
             hiscore = newscore;
-            changed = setAchievement("score10000", hiscore) || changed;
+            changed = setAchievement(AchievementPanel.Names.score10000, hiscore) || changed;
         }
         if (changed)
         {
@@ -133,9 +133,9 @@ public class AchievementManager
     {
         bool changed = false;
         int maxstack = stacks.Max<int>();
-        if (maxstack > getAchievement("tall27"))
+        if (maxstack > getAchievement(AchievementPanel.Names.tall27))
         {
-            changed = setAchievement("tall27", maxstack) || changed;
+            changed = setAchievement(AchievementPanel.Names.tall27, maxstack) || changed;
         }
         // Achievement allblacks
         if
@@ -146,7 +146,11 @@ public class AchievementManager
             cardColors[3] == CardColor.wild
         )
         {
-            changed = setAchievement("allblacks") || changed;
+            allblacks += 1;
+            if (allblacks > getAchievement(AchievementPanel.Names.allblacks))
+            {
+                changed = setAchievement(AchievementPanel.Names.allblacks, allblacks) || changed;
+            }
         }
         // Track samesame
         if
@@ -201,56 +205,56 @@ public class AchievementManager
             }
         }
 
-        if (round > getAchievement("deep10"))
+        if (round > getAchievement(AchievementPanel.Names.deep10))
         {
-            changed = setAchievement("deep10", round) || changed;
+            changed = setAchievement(AchievementPanel.Names.deep10, round) || changed;
         }
         // Tracked achievements
-        if (samesameTrack && round > getAchievement("samesame"))
+        if (samesameTrack && round > getAchievement(AchievementPanel.Names.samesame))
         {
-            changed = setAchievement("samesame", round) || changed;
+            changed = setAchievement(AchievementPanel.Names.samesame, round) || changed;
         }
-        if (nomatchTrack && round > getAchievement("nomatch"))
+        if (nomatchTrack && round > getAchievement(AchievementPanel.Names.nomatch))
         {
-            changed = setAchievement("nomatch", round) || changed;
+            changed = setAchievement(AchievementPanel.Names.nomatch, round) || changed;
         }
-        if (blacktabooTrack && round > getAchievement("blacktaboo"))
+        if (blacktabooTrack && round > getAchievement(AchievementPanel.Names.blacktaboo))
         {
-            changed = setAchievement("blacktaboo", round) || changed;
+            changed = setAchievement(AchievementPanel.Names.blacktaboo, round) || changed;
         }
         // Socialism achievements
-        if (round == 1 && stackno >= getAchievement("saveallfor1"))
+        if (round == 1 && stackno >= getAchievement(AchievementPanel.Names.saveallfor1))
         {
-            changed = setAchievement("saveallfor1", stackno) || changed;
+            changed = setAchievement(AchievementPanel.Names.saveallfor1, stackno) || changed;
         }
-        if (round == 2 && stackno >= getAchievement("save33for2"))
+        if (round == 2 && stackno >= getAchievement(AchievementPanel.Names.save33for2))
         {
-            changed = setAchievement("save33for2", stackno) || changed;
+            changed = setAchievement(AchievementPanel.Names.save33for2, stackno) || changed;
         }
-        if (round == 3 && stackno >= getAchievement("save25for3"))
+        if (round == 3 && stackno >= getAchievement(AchievementPanel.Names.save25for3))
         {
-            changed = setAchievement("save25for3", stackno) || changed;
+            changed = setAchievement(AchievementPanel.Names.save25for3, stackno) || changed;
         }
-        if (round == 4 && stackno >= getAchievement("save20for4"))
+        if (round == 4 && stackno >= getAchievement(AchievementPanel.Names.save20for4))
         {
-            changed = setAchievement("save20for4", stackno) || changed;
+            changed = setAchievement(AchievementPanel.Names.save20for4, stackno) || changed;
         }
-        if (round == 5 && stackno >= getAchievement("save16for5"))
+        if (round == 5 && stackno >= getAchievement(AchievementPanel.Names.save16for5))
         {
-            changed = setAchievement("save16for5", stackno) || changed;
+            changed = setAchievement(AchievementPanel.Names.save16for5, stackno) || changed;
         }
         if (round == 1 && stackno == 8)
         {
             max8for1 = true;
         }
-        if (max8for1 && round > getAchievement("max8for1") && stackno >= 1)
+        if (max8for1 && round > getAchievement(AchievementPanel.Names.max8for1) && stackno >= 1)
         {
-            changed = setAchievement("max8for1", round) || changed;
+            changed = setAchievement(AchievementPanel.Names.max8for1, round) || changed;
         }
         // Miser Achievements
-        if (stackno == 0 && round < getAchievement("loseby4"))
+        if (stackno == 0 && round < getAchievement(AchievementPanel.Names.loseby4))
         {
-            changed = setAchievement("loseby4", round) || changed;
+            changed = setAchievement(AchievementPanel.Names.loseby4, round) || changed;
         }
 
         if (changed)

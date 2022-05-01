@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-[System.Serializable]
 public class AchievementIcon: MonoBehaviour {
 
-	public string achievement;
+	public AchievementDescription achievement;
     private bool _active;
+    private AchievementPanel panel;
 	public bool active
     {
         get
@@ -25,18 +25,24 @@ public class AchievementIcon: MonoBehaviour {
     private Image backImage;
     private Image iconImage;
 
-    public void Init(Sprite iconSprite, Sprite fadedIconSprite, bool active, string achievement)
+    public void Init(Sprite iconSprite, Sprite fadedIconSprite, AchievementDescription achievement, AchievementPanel panel)
     {
         this.iconSprite = iconSprite;
         this.fadedIconSprite = fadedIconSprite;
-        this._active = active;
         this.achievement = achievement;
+        this._active = achievement.completed;
+        this.panel = panel;
     }
 
     private void SetSpriteActive(bool active)
     {
         iconImage.sprite = active ? iconSprite : fadedIconSprite;
         backImage.color = active ? Color.white : Color.gray;
+    }
+
+    public void onClick()
+    {
+        panel.showDescription(achievement.name);
     }
 
 	// Use this for initialization
@@ -50,6 +56,6 @@ public class AchievementIcon: MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-		
+		SetSpriteActive(active);
 	}
 }

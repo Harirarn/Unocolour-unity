@@ -374,7 +374,8 @@ public class BoardManager : MonoBehaviour
 
     CellPos GetMouseCell()
     {
-        Vector3 currentPos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+        //Vector3 currentPos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+        Vector3 currentPos = cameraReference.ScreenToWorldPoint(Input.mousePosition);
         //Debug.Log (currentPos);
         int i, j;
         for (i = 0; i < columns; i++)

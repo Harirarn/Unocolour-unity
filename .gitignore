@@ -79,4 +79,4 @@ crashlytics-build.properties
 
 # Achievements file
 
-*achievements.json
+Assets/achievements.json

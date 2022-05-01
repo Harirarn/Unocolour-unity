@@ -3,18 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[System.Serializable]
 public struct AchievementDescription
 {
-    public string name, title, description;
-    public int threshold, defaults;
+    public AchievementPanel.Names name;
+    public string title, _description;
+    public int threshold, defaults, level;
+    public bool misere, completed;
 
-    public AchievementDescription(string _name, string _title, string _description, int _threshold, int _defaults = 0)
+    public AchievementDescription(AchievementPanel.Names _name, string _title, string _description, int _threshold, int _defaults = 0, bool _misere = false)
     {
         name = _name;
         title = _title;
-        description = _description;
+        this._description = _description;
         threshold = _threshold;
-        defaults = _defaults;
+        level = defaults = _defaults;
+        misere = _misere;
+        completed = false;
+    }
+
+    public void updateLevel(int _level = -1)
+    {
+        if (_level != -1)
+        {
+            level = _level;
+        }
+        completed = (
+            (level >= threshold && !misere) ||
+            (level != 0 && level <= threshold && misere)
+           );
     }
 }
 
@@ -25,33 +42,33 @@ public class AchievementPanel : MonoBehaviour
     public List<Sprite> icons;
     public List<Sprite> fadedIcons;
     public GameObject boardManager;
-    public Text description;
-    public Text progress;
+    public Text title, description, progress;
 
     private AchievementManager achievementsManager;
     const int IANO = 14;
 
+    public enum Names { allblacks = 0, nomatch, samesame, blacktaboo, score10000, deep10, tall27, saveallfor1, save33for2, save25for3, save20for4, save16for5, max8for1, loseby4, };
     public AchievementDescription[] achievementDescriptions = new AchievementDescription[IANO]
     {
         // Color combinations
-        new AchievementDescription("allblacks", "The wildest dreams", "", 1),
-        new AchievementDescription("nomatch", "No match for me", "", 1),
-        new AchievementDescription("samesame", "Same Same", "", 1),
-        new AchievementDescription("blacktaboo", "Black is taboo", "", 1),
+        new AchievementDescription(Names.allblacks, "The wildest dreams", "Play four wilds in a single move.", 1),
+        new AchievementDescription(Names.nomatch, "No match for me", "Only play on different colours per move for first two rounds.", 2),
+        new AchievementDescription(Names.samesame, "Same Same", "Only play on same colour per moves for the first round.", 1),
+        new AchievementDescription(Names.blacktaboo, "Black is taboo", "Avoid wilds for 5 rounds", 5),
         // Milestones
-        new AchievementDescription("score10000", "Hiscore", "", 10000),
-        new AchievementDescription("deep10", "Hiround", "", 10, 1),
-        new AchievementDescription("tall27", "Histack", "", 27, 1),
+        new AchievementDescription(Names.score10000, "Hiscore", "Get a high score of 10000.", 10000),
+        new AchievementDescription(Names.deep10, "Hiround", "Reach round 10.", 10, 1),
+        new AchievementDescription(Names.tall27, "Histack", "Have a stack with 27 cards at the end of a round.", 27, 1),
         // Socialism
-        new AchievementDescription("saveallfor1", "Everyone can be saved", "", 50),
-        new AchievementDescription("save33for2", "Some have to be sacrificed for the greater good", "", 33),
-        new AchievementDescription("save25for3", "Are three rounds too long", "", 25),
-        new AchievementDescription("save20for4", "A score for the fourth", "", 20),
-        new AchievementDescription("save16for5", "The chosen many", "", 16),
+        new AchievementDescription(Names.saveallfor1, "Everyone can be saved", "Have all stack be alive after round 1.", 50),
+        new AchievementDescription(Names.save33for2, "Some have to be sacrificed for the greater good", "Have 33 stack be alive after round 2.", 33),
+        new AchievementDescription(Names.save25for3, "Are three rounds too long", "Have 25 stack be alive after round 3.", 25),
+        new AchievementDescription(Names.save20for4, "A score for the fourth", "Have 20 stack be alive after round 4.", 20),
+        new AchievementDescription(Names.save16for5, "The chosen many", "Have 16 stack be alive after round 5.", 16),
         // Exceptionalism
-        new AchievementDescription("max8for1", "The elites", "", 8),
+        new AchievementDescription(Names.max8for1, "The elites", "Only save 8 stacks in round 1. Then survive past round 8.", 8),
         // Misere
-        new AchievementDescription("loseby4", "Misery", "", 4),
+        new AchievementDescription(Names.loseby4, "Misery", "Have no stacks at the end of round 4.", 4, 0, true),
     };
     private bool[] completeds = new bool[IANO] { true, true, false, false, false, false, false, false, false, false, false, false, false, false, };
     private List<GameObject> achievementIconGameObjects = new List<GameObject>();
@@ -63,17 +80,19 @@ public class AchievementPanel : MonoBehaviour
     {
         achievementsManager = new AchievementManager(this);
         boardManager.GetComponent<BoardManager>().achievementsManager = achievementsManager;
-        for (int i = 0; i < IANO; i++)
+        foreach (Names name in System.Enum.GetValues(typeof(Names)))
         {
+            int i = (int)name;
+            updateAchievement(name, achievementsManager.getAchievement(name));
             achievementIconGameObjects.Add(Instantiate(iconPrefab, transform));
             achievementIconGameObjects[i].GetComponent<AchievementIcon>().Init
             (
-                icons[i], fadedIcons[i], completeds[i], achievementDescriptions[i].name
+                icons[i], fadedIcons[i], achievementDescriptions[i], this
             );
             RectTransform rct = achievementIconGameObjects[i].GetComponent<RectTransform>();
             rct.anchoredPosition = positionByNo(i);
-
         }
+        clearDescription();
         Minimize();
     }
 
@@ -82,21 +101,22 @@ public class AchievementPanel : MonoBehaviour
         return new Vector2(10 + 70 * (i % 7), -10 - 70 * (i / 7));
     }
 
-    public void updateAchievement(string achievement, bool achieved = true)
+    public void updateAchievement(Names achievement, int levelAchieved)
     {
-        for (int i = 0; i < IANO; i++)
-        {
-            if (achievementDescriptions[i].name == achievement)
-            {
-                completeds[i] = achieved;
-            }
-        }
-
+        achievementDescriptions[(int)achievement].updateLevel(levelAchieved);
     }
 
-    public void setDescription(string _description, string _progress = " ")
+    public void showDescription(Names achievement)
     {
-        description.text = _description;
+        AchievementDescription achievementDescription = achievementDescriptions[(int)achievement];
+        title.text = achievementDescription.title;
+        description.text = achievementDescription._description;
+        progress.text = "Progress: " + achievementDescription.level.ToString() + "/" + achievementDescription.threshold.ToString();
+    }
+
+    public void clearDescription()
+    {
+        title.text = description.text = progress.text = "";
     }
 
     public void Minimize()
