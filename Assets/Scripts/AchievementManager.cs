@@ -30,32 +30,16 @@ public class AchievementManager
 
     private AchievementPanel panel;
 
-    public AchievementManager()
+    public AchievementManager(AchievementPanel _panel)
     {
+        panel = _panel;
         LoadData();
+        foreach (AchievementDescription achievement in panel.achievementDescriptions)
+        {
+            getAchievement(achievement.name, achievement.defaults);
+        }
         // Highs
-        hiscore = getAchievement("hiscore");
-        hiround = getAchievement("hiround", 1);
-        histack = getAchievement("histack", 1);
-        // Color combinations
-        getAchievement("allblacks");
-        getAchievement("samesame");
-        getAchievement("nomatch");
-        getAchievement("blacktaboo");
-        // Milestones
-        getAchievement("score10000");
-        getAchievement("deep10");
-        getAchievement("tall27");
-        // Socialism
-        getAchievement("saveallfor1");
-        getAchievement("save33for2");
-        getAchievement("save25for3");
-        getAchievement("save20for4");
-        getAchievement("save16for5");
-        getAchievement("max8for1");
-        // Miser
-        getAchievement("loseby4");
-        //Debug.Log("init: " + achievements.data.Keys.Count.ToString());
+        hiscore = getAchievement("score10000");
         resetTrackers();
 
     }
@@ -94,9 +78,7 @@ public class AchievementManager
 
     public void SaveData()
     {
-        panel.setDescription("boo");
         string filetext = JsonConvert.SerializeObject(achievements);
-        panel.setDescription("hello");
         File.WriteAllText(dataFile, filetext);
         panel.setDescription("bye");
         //Debug.Log("SaveData: " + achievements.data.Keys.Count.ToString());
@@ -138,13 +120,8 @@ public class AchievementManager
         if (newscore > hiscore)
         {
             hiscore = newscore;
-            changed = setAchievement("hiscore", hiscore) || changed;
+            changed = setAchievement("score10000", hiscore) || changed;
         }
-        if (newscore >= 10000)
-        {
-            changed = setAchievement("score10000") || changed;
-        }
-
         if (changed)
         {
             SaveData();
@@ -156,14 +133,9 @@ public class AchievementManager
     {
         bool changed = false;
         int maxstack = stacks.Max<int>();
-        if (maxstack > histack)
+        if (maxstack > getAchievement("tall27"))
         {
-            histack = maxstack;
-            changed = setAchievement("histack", histack) || changed;
-        }
-        if (maxstack >= 27)
-        {
-            changed = setAchievement("tall27") || changed;
+            changed = setAchievement("tall27", maxstack) || changed;
         }
         // Achievement allblacks
         if
@@ -229,61 +201,56 @@ public class AchievementManager
             }
         }
 
-        if (round > hiround)
+        if (round > getAchievement("deep10"))
         {
-            hiround = round;
-            changed = setAchievement("hiround", hiround) || changed;
-        }
-        if (round >= 10)
-        {
-            changed = setAchievement("deep10") || changed;
+            changed = setAchievement("deep10", round) || changed;
         }
         // Tracked achievements
-        if (samesameTrack)
+        if (samesameTrack && round > getAchievement("samesame"))
         {
-            changed = setAchievement("samesame") || changed;
+            changed = setAchievement("samesame", round) || changed;
         }
-        if (nomatchTrack)
+        if (nomatchTrack && round > getAchievement("nomatch"))
         {
-            changed = setAchievement("nomatch") || changed;
+            changed = setAchievement("nomatch", round) || changed;
         }
-        if (blacktabooTrack && round >= 5)
+        if (blacktabooTrack && round > getAchievement("blacktaboo"))
         {
-            changed = setAchievement("blacktaboo") || changed;
+            changed = setAchievement("blacktaboo", round) || changed;
         }
         // Socialism achievements
-        if (round == 1 && stackno >= 50)
+        if (round == 1 && stackno >= getAchievement("saveallfor1"))
         {
-            changed = setAchievement("saveallfor1") || changed;
+            changed = setAchievement("saveallfor1", stackno) || changed;
         }
-        if (round == 2 && stackno >= 33)
+        if (round == 2 && stackno >= getAchievement("save33for2"))
         {
-            changed = setAchievement("save33for2") || changed;
+            changed = setAchievement("save33for2", stackno) || changed;
         }
-        if (round == 3 && stackno >= 25)
+        if (round == 3 && stackno >= getAchievement("save25for3"))
         {
-            changed = setAchievement("save25for3") || changed;
+            changed = setAchievement("save25for3", stackno) || changed;
         }
-        if (round == 4 && stackno >= 20)
+        if (round == 4 && stackno >= getAchievement("save20for4"))
         {
-            changed = setAchievement("save20for4") || changed;
+            changed = setAchievement("save20for4", stackno) || changed;
         }
-        if (round == 5 && stackno >= 16)
+        if (round == 5 && stackno >= getAchievement("save16for5"))
         {
-            changed = setAchievement("save16for5") || changed;
+            changed = setAchievement("save16for5", stackno) || changed;
         }
         if (round == 1 && stackno == 8)
         {
             max8for1 = true;
         }
-        if (max8for1 && round == 8 && stackno >= 1)
+        if (max8for1 && round > getAchievement("max8for1") && stackno >= 1)
         {
-            changed = setAchievement("max8for1") || changed;
+            changed = setAchievement("max8for1", round) || changed;
         }
         // Miser Achievements
-        if (round <= 4 && stackno == 0)
+        if (stackno == 0 && round < getAchievement("loseby4"))
         {
-            changed = setAchievement("loseby4") || changed;
+            changed = setAchievement("loseby4", round) || changed;
         }
 
         if (changed)

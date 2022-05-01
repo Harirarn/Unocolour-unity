@@ -18,7 +18,7 @@ public class BoardManager : MonoBehaviour
     public GameObject UI;
     public AudioClip cardputSound;
     public AudioClip cardtakeSound;
-    public AchievementManager achievements;
+    public AchievementManager achievementsManager;
     private Camera camera;
 
     readonly static float DistributeTime = 0.05f;
@@ -71,8 +71,8 @@ public class BoardManager : MonoBehaviour
         round = 0;
         score = 0;
         UI.GetComponent<UIB>().setRound(round);
-        UI.GetComponent<UIB>().setScore(score, ref achievements);
-        achievements.resetTrackers();
+        UI.GetComponent<UIB>().setScore(score, ref achievementsManager);
+        achievementsManager.resetTrackers();
         animating = false;
         return State.roundstart;
     }
@@ -155,7 +155,7 @@ public class BoardManager : MonoBehaviour
                     cells[moveCellPos[i]].ReceiveCard(holdingStacks[i].SendCard());
                     stacks[i] = cells[moveCellPos[i]].number;
                 }
-                achievements.PlaceShape(shape, cardColors, stacks);
+                achievementsManager.PlaceShape(shape, cardColors, stacks);
 
                 return State.playStart;
             }
@@ -188,9 +188,9 @@ public class BoardManager : MonoBehaviour
         }
 
         score = scoresheet.GetComponent<Scoresheet>().ShowScore(round, score, stackCounts, deck.number == 108);
-        achievements.EndRound(round, stackCounts, deck.number);
+        achievementsManager.EndRound(round, stackCounts, deck.number);
 
-        UI.GetComponent<UIB>().setScore(score, ref achievements);
+        UI.GetComponent<UIB>().setScore(score, ref achievementsManager);
 
         return State.finalscoreboard;
     }
