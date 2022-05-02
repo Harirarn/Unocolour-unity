@@ -75,7 +75,7 @@ public class AchievementPanel : MonoBehaviour
             [Names.save20for4] = new AchievementDescription(Names.save20for4, "A score for the fourth", "Have 20 stack be alive after round 4.", 20),
             [Names.save16for5] = new AchievementDescription(Names.save16for5, "The chosen many", "Have 16 stack be alive after round 5.", 16),
             // Exceptionalism
-            [Names.max8for1] = new AchievementDescription(Names.max8for1, "The elites", "Only save 8 stacks in round 1. Then survive past round 8.", 8),
+            [Names.max8for1] = new AchievementDescription(Names.max8for1, "The elites", "Only save 8 stacks in round 1. Then survive till round 8.", 8),
             // Misere
             [Names.loseby4] = new AchievementDescription(Names.loseby4, "Misery", "Have no stacks at the end of round 4.", 4, 0, true),
         };
@@ -106,6 +106,11 @@ public class AchievementPanel : MonoBehaviour
     {
         achievementDescriptions[achievement].updateLevel(levelAchieved);
         achievementIconGameObjects[achievement].GetComponent<AchievementIcon>().active = achievementDescriptions[achievement].completed;
+    }
+
+    public void setAvailable(Names achievement, bool value)
+    {
+        achievementIconGameObjects[achievement].GetComponent<AchievementIcon>().isAvailable = value;
     }
 
     public void showDescription(Names achievement)

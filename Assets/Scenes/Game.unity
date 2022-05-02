@@ -2537,119 +2537,6 @@ MonoBehaviour:
   title: {fileID: 316159731}
   description: {fileID: 874629798}
   progress: {fileID: 1930450337}
-  achievementDescriptions:
-  - name: 0
-    title: The wildest dreams
-    _description: Play four wilds in a single move.
-    threshold: 1
-    defaults: 0
-    level: 0
-    misere: 0
-    completed: 0
-  - name: 1
-    title: No match for me
-    _description: Only play on different colours per move for first two rounds.
-    threshold: 2
-    defaults: 0
-    level: 0
-    misere: 0
-    completed: 0
-  - name: 2
-    title: Same Same
-    _description: Only play on same colour per moves for the first round.
-    threshold: 1
-    defaults: 0
-    level: 0
-    misere: 0
-    completed: 0
-  - name: 3
-    title: Black is taboo
-    _description: Avoid wilds for 5 rounds
-    threshold: 5
-    defaults: 0
-    level: 0
-    misere: 0
-    completed: 0
-  - name: 4
-    title: Hiscore
-    _description: Get a high score of 10000.
-    threshold: 10000
-    defaults: 0
-    level: 0
-    misere: 0
-    completed: 0
-  - name: 5
-    title: Hiround
-    _description: Reach round 10.
-    threshold: 10
-    defaults: 1
-    level: 1
-    misere: 0
-    completed: 0
-  - name: 6
-    title: Histack
-    _description: Have a stack with 27 cards at the end of a round.
-    threshold: 27
-    defaults: 1
-    level: 1
-    misere: 0
-    completed: 0
-  - name: 7
-    title: Everyone can be saved
-    _description: Have all stack be alive after round 1.
-    threshold: 50
-    defaults: 0
-    level: 0
-    misere: 0
-    completed: 0
-  - name: 8
-    title: Some have to be sacrificed for the greater good
-    _description: Have 33 stack be alive after round 2.
-    threshold: 33
-    defaults: 0
-    level: 0
-    misere: 0
-    completed: 0
-  - name: 9
-    title: Are three rounds too long
-    _description: Have 25 stack be alive after round 3.
-    threshold: 25
-    defaults: 0
-    level: 0
-    misere: 0
-    completed: 0
-  - name: 10
-    title: A score for the fourth
-    _description: Have 20 stack be alive after round 4.
-    threshold: 20
-    defaults: 0
-    level: 0
-    misere: 0
-    completed: 0
-  - name: 11
-    title: The chosen many
-    _description: Have 16 stack be alive after round 5.
-    threshold: 16
-    defaults: 0
-    level: 0
-    misere: 0
-    completed: 0
-  - name: 12
-    title: The elites
-    _description: Only save 8 stacks in round 1. Then survive past round 8.
-    threshold: 8
-    defaults: 0
-    level: 0
-    misere: 0
-    completed: 0
-  - name: 13
-    title: Misery
-    _description: Have no stacks at the end of round 4.
-    threshold: 4
-    defaults: 0
-    level: 0
-    misere: 1
-    completed: 0
 --- !u!1 &888722092
 GameObject:
   m_ObjectHideFlags: 0
@@ -4970,7 +4857,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 61360cfcda401334d9393f847875abf8, type: 3}
+  m_Sprite: {fileID: 417573202, guid: 61360cfcda401334d9393f847875abf8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

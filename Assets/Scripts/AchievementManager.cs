@@ -18,10 +18,31 @@ public class AchievementManager
 
     private int hiscore;
 
-    private bool samesameTrack,
-                 nomatchTrack,
-                 blacktabooTrack,
-                 max8for1;
+    private bool _samesameTrack,
+                 _nomatchTrack,
+                 _blacktabooTrack,
+                 _max8for1;
+    private bool samesameTrack
+    {
+        get { return _samesameTrack; }
+        set { _samesameTrack = value; panel.setAvailable(AchievementPanel.Names.samesame, value); }
+    }
+    private bool nomatchTrack
+    {
+        get { return _nomatchTrack; }
+        set { _nomatchTrack = value; panel.setAvailable(AchievementPanel.Names.nomatch, value); }
+    }
+    private bool blacktabooTrack
+    {
+        get { return _blacktabooTrack; }
+        set { _blacktabooTrack = value; panel.setAvailable(AchievementPanel.Names.blacktaboo, value); }
+    }
+    private bool max8for1
+    {
+        get { return _max8for1; }
+        set { _max8for1 = value; panel.setAvailable(AchievementPanel.Names.max8for1, value); }
+    }
+
     private int allblacks;
 
     private AchievementData achievements = new AchievementData();
@@ -39,8 +60,6 @@ public class AchievementManager
         // }
         // Highs
         hiscore = getAchievement(AchievementPanel.Names.score10000);
-        resetTrackers();
-
     }
 
     public void setPanel(AchievementPanel _panel)
@@ -247,7 +266,7 @@ public class AchievementManager
         {
             max8for1 = true;
         }
-        if (max8for1 && round > getAchievement(AchievementPanel.Names.max8for1) && stackno >= 1)
+        if (max8for1 && round > getAchievement(AchievementPanel.Names.max8for1))
         {
             changed = setAchievement(AchievementPanel.Names.max8for1, round) || changed;
         }
